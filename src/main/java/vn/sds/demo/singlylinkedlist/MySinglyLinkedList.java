@@ -51,24 +51,25 @@ public class MySinglyLinkedList {
 
     //Inserts the specified element at the specified position in this list.
     public void add(int value, int index) {
-        if (index < 0 || index >= size) throw new IndexOutOfBoundsException();
+        if (index < 0 || index > size) throw new IndexOutOfBoundsException();
         if (index == 0) {
             addFirst(value);
-        } else {
-            MyNode newNode = new MyNode(value, null);
-            MyNode pointer = startNode;
-            index = index - 1;
-            for (int i = 0; i < size; i++) {
-                if (i == index) {
-                    MyNode temp = pointer.getNext();
-                    pointer.setNext(newNode);
-                    newNode.setNext(temp);
-                    break;
-                }
-                pointer = pointer.getNext();
-            }
-            size++;
+            return;
         }
+        MyNode newNode = new MyNode(value, null);
+        MyNode pointer = startNode;
+        index = index - 1;
+        for (int i = 0; i < size; i++) {
+            if (i == index) {
+                MyNode temp = pointer.getNext();
+                pointer.setNext(newNode);
+                newNode.setNext(temp);
+                break;
+            }
+            if (pointer != null)
+                pointer = pointer.getNext();
+        }
+        size++;
     }
 
     //Remove the tail element of this list
@@ -85,19 +86,48 @@ public class MySinglyLinkedList {
 
     //Remove all elements that is great than a target value in this list
     public void removeGreaters(int value) {
-        if (isEmpty()) return;
-        MyNode pointer = startNode.getNext();
-        MyNode prev = startNode;
-        while (pointer != null) {
+        while (startNode != null && startNode.getValue() > value) {
             startNode = startNode.getNext();
             size--;
+        }
+
+        if (startNode == null) {
+            endNode = null;
+            return;
+        }
+
+        MyNode pointer = startNode.getNext();
+        MyNode prev = startNode;
+
+        while (pointer != null) {
             if (pointer.getValue() > value) {
-                MyNode temp = pointer.getNext();
-                prev.setNext(temp);
                 size--;
+            } else {
+                prev.setNext(pointer);
+                prev = pointer;
             }
-            prev = pointer;
             pointer = pointer.getNext();
         }
+        prev.setNext(null);
+        endNode = prev;
+    }
+
+    public void print() {
+        if (isEmpty()) {
+            System.out.println("List is empty");
+            return;
+        }
+        if (startNode.getNext() == null) {
+            System.out.println(startNode.getValue());
+            return;
+        }
+        MyNode pointer = startNode;
+        System.out.print(startNode.getValue() + "->");
+        pointer = pointer.getNext();
+        while (pointer.getNext() != null) {
+            System.out.print(pointer.getValue() + "->");
+            pointer = pointer.getNext();
+        }
+        System.out.print(pointer.getValue() + "\n");
     }
 }
