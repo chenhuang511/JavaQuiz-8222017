@@ -75,11 +75,29 @@ public class MySinglyLinkedList {
     public void removeLast() {
         if (isEmpty()) throw new NoSuchElementException();
         MyNode pointer = startNode;
-        while (pointer != endNode) {
+        while (pointer.getNext() != endNode) {
             pointer = pointer.getNext();
         }
         endNode = pointer;
         endNode.setNext(null);
         size--;
+    }
+
+    //Remove all elements that is great than a target value in this list
+    public void removeGreaters(int value) {
+        if (isEmpty()) return;
+        MyNode pointer = startNode.getNext();
+        MyNode prev = startNode;
+        while (pointer != null) {
+            startNode = startNode.getNext();
+            size--;
+            if (pointer.getValue() > value) {
+                MyNode temp = pointer.getNext();
+                prev.setNext(temp);
+                size--;
+            }
+            prev = pointer;
+            pointer = pointer.getNext();
+        }
     }
 }
